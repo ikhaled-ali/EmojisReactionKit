@@ -70,7 +70,7 @@ class NewsListViewController: UIViewController, UITableViewDataSource, UITableVi
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         let reactConfig = ReactionConfig(itemIdentifier: indexPath, emojis: ["👍🏼", "😂", "❤️", "💻"], menu: ViewController.existingMenu, startFrom: .center)
     
-        cell.react(with: reactConfig, delegate: self)
+        cell.contentView.react(with: reactConfig, delegate: self)
     }
 }
 

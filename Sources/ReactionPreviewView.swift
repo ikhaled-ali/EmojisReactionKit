@@ -49,7 +49,7 @@ public class ReactionPreviewView: UIView {
     
     /// A snapshot for the targeted view.
     private var snapshotView:UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -57,8 +57,10 @@ public class ReactionPreviewView: UIView {
     //MARK: - Custom propertis to be used inside the class
     /// A property to save the last highlighted index in menuTableView - used for pan
     private var currentlyHighlightedIndex:IndexPath?
-    /// Check the state where the targeted view is resized
-    private var isSnapshotResized: Bool = false
+    /// Check the state where the targeted view is resized vertically
+    private var isSnapshotResizedV: Bool = false
+    /// Check the state where the targeted view is resized horizontally
+    private var isSnapshotResizedH: Bool = false
     /// Animator for background blur effect
     private var animator: UIViewPropertyAnimator?
     private var isDismissing: Bool = false
@@ -72,6 +74,7 @@ public class ReactionPreviewView: UIView {
     //MARK: - Container frame properties
     private var initialY:CGFloat?
     private var initialHeight:CGFloat?
+    private let defaultMargin:CGFloat = 8
     
     weak var delegate: ReactionPreviewDelegate?
     
@@ -160,19 +163,16 @@ public class ReactionPreviewView: UIView {
     }
     
     private func layout(){
-        guard let originalRect else {return}
+        guard var originalRect else {return}
         self.shouldResizeImage()
         var y = originalRect.origin.y - (reactionView != nil ? (REACTION.SIZE.height + REACTION.MARGIN) : 0 )
         initialY = y
-        if y < 0 || self.isSnapshotResized {
-            y = getMinTop()
-        }
         
-        // for me this container is just to move elements on y axis so doesn't matter to set real x
+        // container initial frame
         container.frame = CGRect(x: 0, y: y, width: self.window?.bounds.width ?? 0, height: 0)
         
         // Reaction view frame
-        let reactionWidth = REACTION.getWidth(count: (_config.emojis?.count ?? 0) + (_config.moreButton ? 1 : 0)) + 16 // 16 is the spacing 
+        let reactionWidth = REACTION.getWidth(count: (_config.emojis?.count ?? 0) + (_config.moreButton ? 1 : 0)) + 16 // 16 is the spacing
         let xReaction = _config.startFrom.isLeading() ? originalRect.origin.x : originalRect.origin.x + originalRect.width - reactionWidth
         y = 0
         reactionView?.frame = CGRect(x: xReaction, y: y, width: reactionWidth, height: REACTION.SIZE.height)
@@ -180,7 +180,7 @@ public class ReactionPreviewView: UIView {
         // Message snapshot Frame
         y = reactionView != nil ? (reactionView!.bottom() + REACTION.MARGIN) : 0
         let snapshotSize = getImageSize()
-        let xSanpshot = isSnapshotResized ? ( _config.startFrom.isLeading() ? originalRect.origin.x : originalRect.origin.x + originalRect.width - snapshotSize.width) : originalRect.origin.x
+        let xSanpshot = isSnapshotResizedV ? ( _config.startFrom.isLeading() ? originalRect.origin.x : originalRect.origin.x + originalRect.width - snapshotSize.width) : originalRect.origin.x
         snapshotView.frame = CGRect(x: xSanpshot, y: y, width: snapshotSize.width, height: snapshotSize.height)
         
         // Menu Frame
@@ -188,7 +188,7 @@ public class ReactionPreviewView: UIView {
         
         let menuHeight = height()
         // fisrt stage will draw the menu from the bottom
-        var yMenu = getMaxBottom() - menuHeight - (isSnapshotResized ? container.top() : 0)
+        var yMenu = getMaxBottom() - menuHeight - getMinTop()
         // here we are checking if we have space to move it to the bottom of snapshot
         let diff = yMenu - snapshotView.bottom()
         yMenu = diff > REACTION.MARGIN ? snapshotView.bottom() + REACTION.MARGIN : yMenu
@@ -203,7 +203,6 @@ public class ReactionPreviewView: UIView {
     func dismiss(with action: UIAction? = nil, emoji: String? = nil, moreButton: Bool = false){
         guard !self.isDismissing else { return }
         self.isDismissing = true
-        animator?.stopAnimation(false)
         animator = UIViewPropertyAnimator(duration: 0.4, curve: .easeOut) { [weak self] in
             self?.blurBackgroundView.effect = nil
         }
@@ -224,11 +223,14 @@ public class ReactionPreviewView: UIView {
                        options: [.curveEaseOut],
                        animations: {
             
-            if !self.isSnapshotResized {
+            if !self.isSnapshotResizedV {
                 self.container.frame.origin.y = self.initialY ?? 0
                 if self._config.startFrom.isCenter() {
                     self.snapshotView.frame.origin.x = self.originalRect?.origin.x ?? 0
                 }
+            }
+            if !self.isSnapshotResizedH {
+                self.container.frame.origin.x = 0
             }
             
             let anchorX: CGFloat = self._config.startFrom.isLeading() ? 0.0 : self._config.startFrom.isTrailing() ? 1.0 : 0.5
@@ -269,7 +271,7 @@ public class ReactionPreviewView: UIView {
         }
     }
     
-   
+    
     
     func animate() {
         
@@ -297,32 +299,52 @@ public class ReactionPreviewView: UIView {
             self?.animator?.finishAnimation(at: .current)
         }
         
-        if _config.startFrom.isCenter() {
-            snapshotView.setCenterX()
-            reactionView?.setCenterX()
-            visualEffectView?.setCenterX()
-        }
-            
-        UIView.animate(withDuration: 0.2) { [weak self] in
+        // we don't need animation when resizing happen
+        UIView.animate(withDuration: (isSnapshotResizedH || isSnapshotResizedV) ? 0 : 0.2) { [weak self] in
+            if self?._config.startFrom.isCenter() ?? false {
+                self?.snapshotView.setCenterX()
+                self?.reactionView?.setCenterX()
+                self?.visualEffectView?.setCenterX()
+            }
             self?.checkViewInSafeArea()
         }
         self.animateMenuAndReaction()
     }
     
     private func checkViewInSafeArea(){
+        checkViewInVerticalSafeArea()
+        checkViewInHorizontalSafeArea()
+    }
+    
+    private func checkViewInVerticalSafeArea(){
         let topOffset = container.top() - getMinTop()
         let bottomOffset = getMaxBottom() - container.bottom()
         guard topOffset < 0 || bottomOffset < 0  else { return }
         // the view is outside the safe area
-        if topOffset < 0 , abs(topOffset) <= abs(bottomOffset) {
-            // we can move down
-            self.container.frame.origin.y += abs(topOffset)
+        if topOffset < 0, !isSnapshotResizedV {
+            if abs(topOffset) <= abs(bottomOffset) {
+                // we can move down
+                self.container.frame.origin.y += abs(topOffset)
+            }else  {
+                self.container.frame.origin.y = getMinTop()
+            }
         }
         else if bottomOffset < 0 , abs(bottomOffset) <= abs(topOffset) {
             // we can move top
             self.container.frame.origin.y -= abs(bottomOffset)
-        }else if isSnapshotResized {
+        }else if isSnapshotResizedV {
             self.container.frame.origin.y = getMinTop()
+        }
+    }
+    
+    private func checkViewInHorizontalSafeArea(){
+        let x0 = _config.startFrom.isLeading() ? self.snapshotView.left() : min(self.snapshotView.left(), self.reactionView?.left() ?? self.snapshotView.left(), self.visualEffectView?.left() ?? self.snapshotView.left())
+        let x1 = max(self.snapshotView.width(), self.reactionView?.width() ?? self.snapshotView.width(), self.visualEffectView?.width() ?? self.snapshotView.width())
+        
+        if x0 < getMinLeft() {
+            self.container.frame.origin.x += abs(x0) + getMinLeft()
+        }else if x0 + x1 > getMaxAvailableWidth() {
+            self.container.frame.origin.x = getMaxAvailableWidth() - x0 - x1 + getMinLeft()
         }
     }
     
@@ -339,24 +361,43 @@ public class ReactionPreviewView: UIView {
     
     private func shouldResizeImage() {
         guard let image = snapshotView.image else {return}
-        let maxAvailableSpace = getMaxAvailableSpace()
-        if image.size.height > maxAvailableSpace {
-            snapshotView.image = image.resizedToFit(in: CGSize(width: image.size.width, height: maxAvailableSpace))
-            isSnapshotResized = true
+        let maxAvailableHeight = getMaxAvailableHeight()
+        let maxAvailableWidth = getMaxAvailableWidth()
+        if image.size.height > maxAvailableHeight {
+            isSnapshotResizedV = true
         }
+        if image.size.width > maxAvailableWidth {
+            isSnapshotResizedH = true
+        }
+        if isSnapshotResizedH || isSnapshotResizedV {
+            snapshotView.image = image.resizedToFit(in: CGSize(width: isSnapshotResizedH ? maxAvailableWidth : image.size.width, height: isSnapshotResizedV ? maxAvailableHeight : image.size.height))
+        }
+         
     }
     
-    private func getMaxAvailableSpace() -> CGFloat {
+    // vertically
+    private func getMaxAvailableHeight() -> CGFloat {
         return getMaxBottom() - getMinTop() - REACTION.SIZE.height - REACTION.MARGIN
     }
     
+    // horizontally
+    private func getMaxAvailableWidth() -> CGFloat {
+        return (self.window?.bounds.width ?? 0) - 2 * defaultMargin
+    }
+    
     private func getMinTop() -> CGFloat {
-        return REACTION.MARGIN + (self.window?.frame.origin.y ?? 0) + (self.window?.safeAreaInsets.top ?? REACTION.MARGIN)
+        let safeAreaTopInset:CGFloat = self.window?.safeAreaInsets.top ?? 0
+        return REACTION.MARGIN + (self.window?.frame.origin.y ?? 0) + (safeAreaTopInset > 0 ? safeAreaTopInset : REACTION.MARGIN)
     }
     
     private func getMaxBottom() -> CGFloat {
         let height = self.window?.frame.height ?? 0
-        return height - REACTION.MARGIN - (self.window?.safeAreaInsets.bottom ?? REACTION.MARGIN)
+        let safeAreaBottomInset:CGFloat = self.window?.safeAreaInsets.bottom ?? 0
+        return height - REACTION.MARGIN - (safeAreaBottomInset > 0 ? safeAreaBottomInset : REACTION.MARGIN)
+    }
+    
+    private func getMinLeft() -> CGFloat {
+        return defaultMargin
     }
     
     private func addInitialData() {

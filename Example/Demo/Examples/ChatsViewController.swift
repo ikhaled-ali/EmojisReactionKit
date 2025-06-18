@@ -89,7 +89,7 @@ class ChatsViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? MessageCell else { return }
         
-        let reactConfig = ReactionConfig(itemIdentifier: indexPath, emojis: ["👍🏼", "😂", "❤️", "💻"], menu: ViewController.existingMenu, startFrom: cell.isIncoming ? .leading : .trailing)
+        let reactConfig = ReactionConfig(itemIdentifier: indexPath, emojis: ["👍🏼", "😂", "❤️", "💻"], menu: ViewController.existingMenu, startFrom: .center)//cell.isIncoming ? .leading : .trailing)
     
         reactionPreview = cell.bubbleView.react(with: reactConfig, delegate: self)
     }

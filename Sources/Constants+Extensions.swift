@@ -77,6 +77,10 @@ extension UIView {
         self.frame.origin.x + self.frame.size.width
     }
     
+    func width() -> CGFloat {
+        self.frame.size.width
+    }
+    
     @objc public func snapshot() -> UIImage {
         guard let screen = self.window?.screen else {return UIImage()}
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, screen.scale)
