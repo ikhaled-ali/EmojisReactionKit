@@ -1,4 +1,4 @@
-![EmojisReactionKit](https://private-user-images.githubusercontent.com/18719370/455957489-67f489ad-3be1-490f-9279-7278fe3b55b6.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTAxNTgwMzIsIm5iZiI6MTc1MDE1NzczMiwicGF0aCI6Ii8xODcxOTM3MC80NTU5NTc0ODktNjdmNDg5YWQtM2JlMS00OTBmLTkyNzktNzI3OGZlM2I1NWI2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA2MTclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNjE3VDEwNTUzMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWM0MzkxZWY5MTY3M2Y5Y2I5NjEyMDBkNjJlOGZhOGExNTc4ZmU2ZDU1NzAyYmQ2MzEwYzNiMDkyMWZmNmEzOGYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.eRAIMpDd655adPnA_qvIjFCu6zcyKFVMjVp9s51RQqA)
+![EmojisReactionKit](https://i.postimg.cc/LsFdKB2G/image-new.png)
 
 # EmojisReactionKit 👍🏼 ❤️ 😂 👌🏼
 
@@ -25,7 +25,7 @@ Built from scratch to offer a familiar yet customizable interaction — ideal fo
 
 ## 📷 Preview
 
-![EmojisReactionKit](https://private-user-images.githubusercontent.com/18719370/455955723-b92ab4dc-e792-4a06-9f83-c48eb938cc30.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTAxNTc3NzQsIm5iZiI6MTc1MDE1NzQ3NCwicGF0aCI6Ii8xODcxOTM3MC80NTU5NTU3MjMtYjkyYWI0ZGMtZTc5Mi00YTA2LTlmODMtYzQ4ZWI5MzhjYzMwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA2MTclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNjE3VDEwNTExNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPThmM2NlM2IyNzNiMTk1ZDliY2M5NGJmOTVkODJjNzNhNzhkMDFlZWUzNzU3NDllNmVkNDkwOTczMmM0ODUxODQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.GdDHKBSvyamF5SVOQLx3giY3wnbmuwR_3TcSk5ZtgTQ)
+![EmojisReactionKit](https://i.postimg.cc/mrBdydbZ/Untitled-1.png)
 
 ---
 
@@ -41,8 +41,8 @@ Use **Swift Package Manager**:
 
 In Xcode:
 
-- Go to **File > Add Packages**
-- Enter the repository URL:
+- Go to **File > Add Package Dependencies**
+- Enter the repository URL: https://github.com/ikhaled-ali/EmojisReactionKit.git
 - Choose the latest version and add the package.
 
 ---
@@ -100,7 +100,7 @@ func didDismiss(on identifier: Any, action: UIAction?, emoji: String?, moreButto
 Use the ReactionTheme to customize blur, background, and icon appearance.
 
 ## 📄 License
-MIT License. See LICENSE for more info.
+MIT License. See <a target="_blank" href="https://github.com/ikhaled-ali/EmojisReactionKit/blob/main/LICENSE">LICENSE</a> for more info.
 
 ## 😎 Author
 
