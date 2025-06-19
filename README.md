@@ -7,6 +7,7 @@ Perfect for messaging apps, comments, or any UI that could benefit from emoji-ba
 
 Built from scratch to offer a familiar yet customizable interaction — ideal for chat interfaces, social feeds, and interactive content.
 
+![swift support](https://img.shields.io/badge/swift-green) [![SwiftPM Compatible](https://img.shields.io/badge/SwiftPM-Compatible-brightgreen.svg)](https://swift.org/package-manager/) ![Platform](https://img.shields.io/badge/Platforms-iOS%20%7c%20macOS-lightgray.svg?style=flat)
 ---
 
 ## ✨ Features
