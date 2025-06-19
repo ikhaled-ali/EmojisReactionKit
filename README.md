@@ -78,7 +78,7 @@ ReactionConfig(
 yourView.react(with: config, delegate: self)
 ```
 
-### 🧩 Delegate Callback
+### 🧩 Delegate
 ```swift
 func didDismiss(on identifier: Any, action: UIAction?, emoji: String?, moreButton: Bool) {
     if let emoji = emoji {
@@ -90,16 +90,16 @@ func didDismiss(on identifier: Any, action: UIAction?, emoji: String?, moreButto
     }
 }
 ```
-#### For detailed examples, check out the example project included in the repository.
+For detailed examples, check out the example project included in the repository.
 
 ## 📚 FAQ
 
-##### Does it support RTL layouts?
-###### ✅ Yes, RTL is supported out of the box.
-##### Can I disable the emoji reaction or menu?
-###### ✅ Yes. Just pass an empty emojis array or set menu: nil.
-##### How do I theme it?
-###### Use the ReactionTheme to customize blur, background, and icon appearance.
+- Does it support RTL layouts?
+  ✅ Yes, RTL is supported out of the box.
+- Can I disable the emoji reaction or menu?
+  ✅ Yes. Just pass an empty emojis array or set menu: nil.
+- How do I theme it?
+  Use the ReactionTheme to customize blur, background, and icon appearance.
 
 ## 📄 License
 MIT License. See <a target="_blank" href="https://github.com/ikhaled-ali/EmojisReactionKit/blob/main/LICENSE">LICENSE</a> for more info.
