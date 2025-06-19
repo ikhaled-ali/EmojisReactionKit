@@ -71,7 +71,7 @@ class CollectionViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? ColorCell else { return }
-        let reactConfig = ReactionConfig(itemIdentifier: indexPath, emojis: ["👍🏼", "😂", "❤️", "💻"], menu: ViewController.existingMenu, startFrom: .center)
+        let reactConfig = ReactionConfig(itemIdentifier: indexPath, emojis: ["👍🏼", "😂", "❤️", "💻"], menu: ViewController.existingMenu, startFrom: .leading)
         cell.react(with: reactConfig, delegate: nil)
     }
 }
