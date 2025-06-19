@@ -89,6 +89,7 @@ func didDismiss(on identifier: Any, action: UIAction?, emoji: String?, moreButto
     }
 }
 ```
+#### For detailed examples, check out the example project included in the repository.
 
 ## 📚 FAQ
 
