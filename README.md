@@ -26,7 +26,7 @@ Built from scratch to offer a familiar yet customizable interaction — ideal fo
 
 ## 📷 Preview
 
-![EmojisReactionKit](https://i.ibb.co/SDfYZrQL/example-1-ezgif-com-optimize.gif) ![EmojisReactionKit](https://i.ibb.co/7JW02hPt/ezgif-com-optimize.gif) ![EmojisReactionKit](https://i.ibb.co/Ps05fTnF/ezgif-com-optimize-1.gif)
+![EmojisReactionKit](https://i.ibb.co/SDfYZrQL/example-1-ezgif-com-optimize.gif) ![EmojisReactionKit](https://i.ibb.co/Ps05fTnF/ezgif-com-optimize-1.gif)
 
 ---
 
