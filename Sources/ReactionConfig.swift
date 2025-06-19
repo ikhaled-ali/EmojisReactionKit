@@ -87,6 +87,15 @@ public struct ReactionTheme {
 
     /// A fallback solid background color for the menu when "Reduce Transparency" is enabled in accessibility settings.
     public let menuBlurFallbackColor: UIColor
+    
+    public init(backgroundFallbackColor: UIColor, backgroundBlurEffectStyle: UIVisualEffect, reactionBackgroundColor: UIColor, moreButtonIcon: UIImage, menuBlurEffectStyle: UIVisualEffect, menuBlurFallbackColor: UIColor) {
+        self.backgroundFallbackColor = backgroundFallbackColor
+        self.backgroundBlurEffectStyle = backgroundBlurEffectStyle
+        self.reactionBackgroundColor = reactionBackgroundColor
+        self.moreButtonIcon = moreButtonIcon
+        self.menuBlurEffectStyle = menuBlurEffectStyle
+        self.menuBlurFallbackColor = menuBlurFallbackColor
+    }
 }
 
 /// Represents the direction from which the reaction view animation originates.
