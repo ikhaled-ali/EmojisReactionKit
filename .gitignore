@@ -1,7 +1,20 @@
+# Xcode
 .DS_Store
-/.build
-/Packages
+*.xcodeproj
+!MyAwesomePackageDemo/MyAwesomePackageDemo.xcodeproj # Keep your demo project
+*.xcworkspace
+*.playground
 xcuserdata/
 DerivedData/
-.swiftpm/configuration/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
+# Swift Package Manager
+.build/
+Package.resolved
+.swiftpm/
+
+# Dependencies
+Pods/
+Carthage/Build/
+
+# Misc
+.localized
