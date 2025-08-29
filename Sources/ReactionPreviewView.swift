@@ -553,10 +553,7 @@ extension ReactionPreviewView : ReactionViewDelegate {
 extension ReactionPreviewView {
     
     private func setupReactionView() {
-        self.reactionView = ReactionView()
-        self.reactionView!._emojis = _config.emojis!
-        self.reactionView!.direction = _config.startFrom
-        self.reactionView!.isAnimationEnabled = _config.emojiEnteranceAnimated
+        self.reactionView = ReactionView(_config)
         self.reactionView!.setupIcon(_theme.moreButtonIcon)
         self.reactionView!.backgroundColor = _theme.reactionBackgroundColor
         self.reactionView!.alpha = 0

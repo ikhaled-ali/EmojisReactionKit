@@ -10,11 +10,12 @@ import UIKit
 
 class ReactionView: UIView {
     
-    var _emojis: [String] = []
+    private var _emojis: [String] = []
     private var emojis: [String] = []
     private var selectedEmoji: String?
-    var isAnimationEnabled:Bool = true
-    var direction: ReactionDirection = .leading
+    private var isAnimationEnabled:Bool = true
+    private var direction: ReactionDirection = .leading
+    private var isMoreButtonEnabled:Bool = true
     private var currentlyHighlightedIndex:IndexPath?
     private var isAnimationDone:Bool = false
     private var isPanChanged = false
@@ -69,10 +70,16 @@ class ReactionView: UIView {
         return collectionView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    init(_ config: ReactionConfig) {
+        super.init(frame: .zero)
+        self._emojis = config.emojis!
+        self.direction = config.startFrom
+        self.isAnimationEnabled = config.emojiEnteranceAnimated
+        self.isMoreButtonEnabled = config.moreButton
         configureView()
     }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureView()
@@ -86,6 +93,8 @@ class ReactionView: UIView {
     
     private func setupView() {
         self.clipsToBounds = false
+        backButtonBg.isHidden = !isMoreButtonEnabled
+        moreButton.isHidden = !isMoreButtonEnabled
         moreButton.addTarget(self, action: #selector(didClickButton), for: .touchUpInside)
     }
     
@@ -114,20 +123,24 @@ class ReactionView: UIView {
             collectionView.topAnchor.constraint(equalTo: collectionContainerView.topAnchor, constant: 50),
             collectionView.leadingAnchor.constraint(equalTo: collectionContainerView.leadingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: collectionContainerView.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: collectionContainerView.trailingAnchor, constant: -(8 + REACTION.ITEM_SIZE.width)),
-
-            // moreButton constraints
-            moreButton.leadingAnchor.constraint(equalTo: collectionView.trailingAnchor),
-            moreButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            moreButton.widthAnchor.constraint(equalToConstant: REACTION.ITEM_SIZE.width),
-            moreButton.heightAnchor.constraint(equalToConstant: REACTION.ITEM_SIZE.height),
-
-            // backButtonBg constraints
-            backButtonBg.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 2),
-            backButtonBg.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
-            backButtonBg.topAnchor.constraint(equalTo: moreButton.topAnchor),
-            backButtonBg.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
+            collectionView.trailingAnchor.constraint(equalTo: collectionContainerView.trailingAnchor, constant: -(8 + (isMoreButtonEnabled ? REACTION.ITEM_SIZE.width : 0))),
         ])
+        
+        if isMoreButtonEnabled {
+            NSLayoutConstraint.activate([
+                // moreButton constraints
+                moreButton.leadingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+                moreButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+                moreButton.widthAnchor.constraint(equalToConstant: REACTION.ITEM_SIZE.width),
+                moreButton.heightAnchor.constraint(equalToConstant: REACTION.ITEM_SIZE.height),
+                
+                // backButtonBg constraints
+                backButtonBg.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 2),
+                backButtonBg.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
+                backButtonBg.topAnchor.constraint(equalTo: moreButton.topAnchor),
+                backButtonBg.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
+            ])
+        }
     }
     
     override func layoutSubviews() {
@@ -153,12 +166,16 @@ class ReactionView: UIView {
     
     func startAnimating() {
         guard !direction.isCenter(), isAnimationEnabled else {
-            self.moreButton.transform = .identity
-            self.moreButton.alpha = 1
+            if isMoreButtonEnabled {
+                self.moreButton.transform = .identity
+                self.moreButton.alpha = 1
+            }
             self.loadData()
             return
         }
-        self.moreButton.zoomInBounce(duration: direction.isLeading() ? 0.2 : 0.3, options: [.curveEaseInOut], delay: 0.1)
+        if isMoreButtonEnabled {
+            self.moreButton.zoomInBounce(duration: direction.isLeading() ? 0.2 : 0.3, options: [.curveEaseInOut], delay: 0.1)
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.loadData()
         }
@@ -226,6 +243,7 @@ extension ReactionView {
     }
     
     private func checkButtonHighlight(gestureRecognizer: UIGestureRecognizer) -> CGPoint?{
+        guard isMoreButtonEnabled else {return nil}
         let exactPanPoint = gestureRecognizer.location(in: moreButton)
         // i give some margin to the touch area so the emoji start highlighted before reaching its exact area
         let marginPanPoint = CGPoint(x: exactPanPoint.x, y: exactPanPoint.y - REACTION.TOUCH_AREA_MARGIN)
